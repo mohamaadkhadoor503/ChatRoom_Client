@@ -8,7 +8,9 @@ import java.rmi.*;
  *
  * @author LENOVO
  */
+
 public interface clientInterface extends Remote{
+   
     public void reciveMessage(String name)throws RemoteException;
     public String getClientName() throws RemoteException;
     public int getId() throws RemoteException;

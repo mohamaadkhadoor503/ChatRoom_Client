@@ -1,4 +1,5 @@
 package Client;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -7,27 +8,34 @@ import java.io.IOException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.*;
-import javax.swing.JOptionPane;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 import serverInterfaces.ChatInterface;
+
 public class ChatForm extends javax.swing.JFrame implements clientInterfaces.clientInterface {
-private User client;
- private String host;
+
+    private String nameroom;
+    private String host;
     private int port;
     private ChatInterface chatservice;
-    public ChatForm(User user) throws RemoteException, NotBoundException  {
+    private int user_id;
+
+    public ChatForm(int user_id, String roomname) throws RemoteException, NotBoundException {
         initComponents();
-       this.client=user;
-        host = JOptionPane.showInputDialog("Enter server's ip");
-        port = Integer.parseInt(JOptionPane.showInputDialog("Enter service's port"));
-        getTheService();
+        this.user_id = user_id;
+        this.nameroom = roomname;
+        this.setResizable(false);
+        this.host = host;
+        this.port = port;
+        getTheService("localhost", 10008);
         UnicastRemoteObject.exportObject(this, 0);
-    chatservice.sign(this);
+        chatservice.sign(this);
     }
-     private void getTheService() throws RemoteException, NotBoundException {
+
+    private void getTheService(String host, int port) throws RemoteException, NotBoundException {
         Registry reg = LocateRegistry.getRegistry(host, port);
         chatservice = (ChatInterface) reg.lookup(ChatInterface.LOOKUP_NAME);
 
@@ -52,19 +60,23 @@ private User client;
         jScrollPane2 = new javax.swing.JScrollPane();
         jTextArea1 = new javax.swing.JTextArea();
         messageTextField = new javax.swing.JTextField();
-        sendButton = new javax.swing.JButton();
         ReciverIDTextField = new javax.swing.JTextField();
-        SendFileButton = new javax.swing.JButton();
         privateMessageTextField = new javax.swing.JTextField();
-        sendPrivateMessageButton = new javax.swing.JButton();
+        regbutton1 = new javax.swing.JButton();
+        regbutton2 = new javax.swing.JButton();
+        regbutton3 = new javax.swing.JButton();
+        jLabel9 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
-        jLabel4 = new javax.swing.JLabel();
-        jLabel8 = new javax.swing.JLabel();
+        jLabel5 = new javax.swing.JLabel();
+        jLabel6 = new javax.swing.JLabel();
+        jLabel10 = new javax.swing.JLabel();
+        regbutton4 = new javax.swing.JButton();
+        regbutton5 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jPanel1.setBackground(new java.awt.Color(248, 237, 237));
+        jPanel1.setPreferredSize(new java.awt.Dimension(800, 600));
 
         jPanel3.setBackground(new java.awt.Color(102, 0, 102));
 
@@ -119,34 +131,78 @@ private User client;
             }
         });
 
-        sendButton.setText("Send");
-        sendButton.addActionListener(new java.awt.event.ActionListener() {
+        regbutton1.setBackground(new java.awt.Color(153, 0, 153));
+        regbutton1.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        regbutton1.setForeground(new java.awt.Color(255, 255, 255));
+        regbutton1.setText("Send file");
+        regbutton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                sendButtonActionPerformed(evt);
+                regbutton1ActionPerformed(evt);
             }
         });
 
-        SendFileButton.setText("Send File");
-        SendFileButton.addActionListener(new java.awt.event.ActionListener() {
+        regbutton2.setBackground(new java.awt.Color(153, 0, 153));
+        regbutton2.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        regbutton2.setForeground(new java.awt.Color(255, 255, 255));
+        regbutton2.setText("send private message");
+        regbutton2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                SendFileButtonActionPerformed(evt);
+                regbutton2ActionPerformed(evt);
             }
         });
 
-        sendPrivateMessageButton.setText("send private message ");
-        sendPrivateMessageButton.addActionListener(new java.awt.event.ActionListener() {
+        regbutton3.setBackground(new java.awt.Color(153, 0, 153));
+        regbutton3.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        regbutton3.setForeground(new java.awt.Color(255, 255, 255));
+        regbutton3.setText("send");
+        regbutton3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                sendPrivateMessageButtonActionPerformed(evt);
+                regbutton3ActionPerformed(evt);
             }
         });
 
-        jLabel3.setText("Chat");
+        jLabel9.setFont(new java.awt.Font("Palatino Linotype", 3, 24)); // NOI18N
+        jLabel9.setForeground(new java.awt.Color(175, 145, 145));
+        jLabel9.setText("Members");
 
-        jLabel2.setText("Enter text here");
+        jLabel3.setFont(new java.awt.Font("Segoe UI", 2, 12)); // NOI18N
+        jLabel3.setForeground(new java.awt.Color(255, 0, 102));
+        jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        jLabel3.setText("Enter text here");
 
-        jLabel4.setText("Reciver ID");
+        jLabel5.setFont(new java.awt.Font("Segoe UI", 2, 14)); // NOI18N
+        jLabel5.setForeground(new java.awt.Color(255, 0, 102));
+        jLabel5.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        jLabel5.setText("Private Message");
 
-        jLabel8.setText("private message ");
+        jLabel6.setFont(new java.awt.Font("Segoe UI", 2, 14)); // NOI18N
+        jLabel6.setForeground(new java.awt.Color(255, 0, 102));
+        jLabel6.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        jLabel6.setText("Reciver ID");
+
+        jLabel10.setFont(new java.awt.Font("Palatino Linotype", 3, 24)); // NOI18N
+        jLabel10.setForeground(new java.awt.Color(175, 145, 145));
+        jLabel10.setText("Chat");
+
+        regbutton4.setBackground(new java.awt.Color(153, 0, 153));
+        regbutton4.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        regbutton4.setForeground(new java.awt.Color(255, 255, 255));
+        regbutton4.setText("Refresh");
+        regbutton4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                regbutton4ActionPerformed(evt);
+            }
+        });
+
+        regbutton5.setBackground(new java.awt.Color(153, 0, 153));
+        regbutton5.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        regbutton5.setForeground(new java.awt.Color(255, 255, 255));
+        regbutton5.setText("Send private file ");
+        regbutton5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                regbutton5ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -154,111 +210,125 @@ private User client;
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGap(18, 18, 18)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 157, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 280, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGap(34, 34, 34)
+                                .addGap(6, 6, 6)
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(jPanel1Layout.createSequentialGroup()
+                                        .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                         .addComponent(messageTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGap(83, 83, 83)
-                                        .addComponent(sendButton))
+                                        .addGap(18, 18, 18)
+                                        .addComponent(regbutton3)
+                                        .addGap(27, 27, 27)
+                                        .addComponent(regbutton1))
                                     .addGroup(jPanel1Layout.createSequentialGroup()
-                                        .addComponent(ReciverIDTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                                .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addGap(38, 38, 38))
+                                            .addComponent(jLabel5, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE))
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(jLabel8)
-                                        .addGap(160, 160, 160)
-                                        .addComponent(SendFileButton))
-                                    .addGroup(jPanel1Layout.createSequentialGroup()
-                                        .addComponent(privateMessageTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 167, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGap(64, 64, 64)
-                                        .addComponent(sendPrivateMessageButton))))
+                                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(ReciverIDTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 167, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(privateMessageTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 167, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addGap(52, 52, 52)
+                                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                            .addComponent(regbutton5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                            .addComponent(regbutton2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))))
                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGap(18, 18, 18)
-                                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 134, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 157, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(47, 47, 47))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                                .addGap(98, 98, 98)
+                                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 534, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 46, Short.MAX_VALUE)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 157, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGap(6, 6, 6)
+                                .addComponent(regbutton4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))))
+                .addGap(64, 64, 64)
                 .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(34, 34, 34)
                 .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(34, 34, 34))
+            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel1Layout.createSequentialGroup()
+                    .addGap(28, 28, 28)
+                    .addComponent(jLabel10)
+                    .addContainerGap(834, Short.MAX_VALUE)))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(42, 42, 42)
+                .addGap(18, 18, 18)
                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(12, 12, 12)
+                .addComponent(jLabel9)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(33, 33, 33)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 164, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(jPanel1Layout.createSequentialGroup()
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addComponent(sendButton))
-                                    .addGroup(jPanel1Layout.createSequentialGroup()
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(jLabel2)
-                                        .addGap(5, 5, 5)
-                                        .addComponent(messageTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 225, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 225, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(regbutton4))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(18, 18, 18)
-                        .addComponent(jLabel3)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel4)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(5, 5, 5)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(ReciverIDTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(SendFileButton))
-                        .addGap(18, 18, 18))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 209, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel8)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                        .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(messageTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(regbutton3))
+                                .addGap(2, 2, 2))
+                            .addComponent(regbutton1, javax.swing.GroupLayout.Alignment.TRAILING))))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 20, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(privateMessageTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(sendPrivateMessageButton))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(ReciverIDTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(privateMessageTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(regbutton2, javax.swing.GroupLayout.Alignment.TRAILING))
+                .addGap(18, 18, 18)
+                .addComponent(regbutton5)
+                .addContainerGap())
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(20, 20, 20))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                         .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(66, 66, 66))))
+                        .addGap(66, 66, 66))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(20, 20, 20))))
+            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel1Layout.createSequentialGroup()
+                    .addGap(54, 54, 54)
+                    .addComponent(jLabel10)
+                    .addContainerGap(398, Short.MAX_VALUE)))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 916, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 486, Short.MAX_VALUE))
         );
 
         pack();
@@ -269,32 +339,23 @@ private User client;
         // TODO add your handling code here:
     }//GEN-LAST:event_messageTextFieldActionPerformed
 
-    private void sendButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sendButtonActionPerformed
-        try {
-            String message=messageTextField.getText();
-
-            chatservice.sendToAll(this,message);
-            
-            // TODO add your handling code here:
-        } catch (RemoteException ex) {
-            Logger.getLogger(ChatForm.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }//GEN-LAST:event_sendButtonActionPerformed
-
-    private void SendFileButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SendFileButtonActionPerformed
-
+    private void regbutton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_regbutton1ActionPerformed
         // TODO add your handling code here:
 
-        JFileChooser filechooser =new JFileChooser();
-        if( filechooser.showOpenDialog(null)==JFileChooser.APPROVE_OPTION){
-            FileInputStream fileInputStream=null;
+        // TODO add your handling code here:
+        JFileChooser filechooser = new JFileChooser();
+        if (filechooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+            FileInputStream fileInputStream = null;
             try {
-                File file=filechooser.getSelectedFile();
+                File file = filechooser.getSelectedFile();
                 fileInputStream = new FileInputStream(file);
-                byte[]data=new byte[(int)file.length()];
+                byte[] data = new byte[(int) file.length()];
                 fileInputStream.read(data);
-                int rid=Integer.parseInt(ReciverIDTextField.getText());
-                chatservice.sendFile(this,rid,file.getName(),data);
+                int rid = Integer.parseInt(ReciverIDTextField.getText());
+//                chatservice.sendFile(this, rid, file.getName(), data);
+
+                chatservice.sendFileAll(this, file.getName(), data);
+
             } catch (FileNotFoundException ex) {
                 Logger.getLogger(ChatForm.class.getName()).log(Level.SEVERE, null, ex);
             } catch (IOException ex) {
@@ -308,33 +369,102 @@ private User client;
             }
         }
 
-    }//GEN-LAST:event_SendFileButtonActionPerformed
+    }//GEN-LAST:event_regbutton1ActionPerformed
 
-    private void sendPrivateMessageButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sendPrivateMessageButtonActionPerformed
+    private void regbutton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_regbutton2ActionPerformed
+        // TODO add your handling code here:
+        if (ReciverIDTextField.getText().trim().isEmpty()) {
+            JOptionPane.showMessageDialog(null, "الرجاء ادخالID المستقبل ");
+        } else {
+            int rid = 0;
+            try {
+                    rid = Integer.parseInt(ReciverIDTextField.getText());
+                } catch (Exception ex) {
+          JOptionPane.showMessageDialog(this, "يجب ادخال رقم صحيح بخانة ID حصرا");
+
+                }
+            try {
+                // TODO add your handling code here:
+                
+                String message = privateMessageTextField.getText();
+                chatservice.sendToMember(this, rid, message);
+            } catch (RemoteException ex) {
+                Logger.getLogger(ChatForm.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+
+    }//GEN-LAST:event_regbutton2ActionPerformed
+
+    private void regbutton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_regbutton3ActionPerformed
+        // TODO add your handling code here:
         try {
+            String message = messageTextField.getText();
+
+//            chatservice.sendToAll(this, message);
+            chatservice.sendToGroup(this, message, nameroom);
             // TODO add your handling code here:
-            int rid=Integer.parseInt(ReciverIDTextField.getText());
-            String message =privateMessageTextField.getText();
-            chatservice.sendToMember(this, rid, message);
         } catch (RemoteException ex) {
             Logger.getLogger(ChatForm.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }//GEN-LAST:event_regbutton3ActionPerformed
 
-    }//GEN-LAST:event_sendPrivateMessageButtonActionPerformed
+    private void regbutton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_regbutton4ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_regbutton4ActionPerformed
+
+    private void regbutton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_regbutton5ActionPerformed
+        // TODO add your handling code here:
+
+        // TODO add your handling code here:
+        if (ReciverIDTextField.getText().trim().isEmpty()) {
+            JOptionPane.showMessageDialog(null, "الرجاء ادخالID المستقبل ");
+        } else {
+            int rid = 0;
+  try {
+                        rid = Integer.parseInt(ReciverIDTextField.getText());
+                    } catch (Exception ex) {
+                        JOptionPane.showMessageDialog(this, "يجب ادخال رقم صحيح بخانة ID حصرا");
+                    }
+
+            JFileChooser filechooser = new JFileChooser();
+            if (filechooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+                FileInputStream fileInputStream = null;
+                try {
+                    File file = filechooser.getSelectedFile();
+                    fileInputStream = new FileInputStream(file);
+                    byte[] data = new byte[(int) file.length()];
+                    fileInputStream.read(data);
+                  
+                    chatservice.sendFile(this, rid, file.getName(), data);
+
+                } catch (FileNotFoundException ex) {
+                    Logger.getLogger(ChatForm.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (IOException ex) {
+                    Logger.getLogger(ChatForm.class.getName()).log(Level.SEVERE, null, ex);
+                } finally {
+                    try {
+                        fileInputStream.close();
+                    } catch (IOException ex) {
+                        Logger.getLogger(ChatForm.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+            }
+
+        }
+    }//GEN-LAST:event_regbutton5ActionPerformed
 
     /**
      * @param args the command line arguments
      */
 
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField ReciverIDTextField;
-    private javax.swing.JButton SendFileButton;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
@@ -345,11 +475,14 @@ private User client;
     private javax.swing.JTextField messageTextField;
     private javax.swing.JTextField privateMessageTextField;
     private javax.swing.JTextArea reciveMessagesTextArea;
-    private javax.swing.JButton sendButton;
-    private javax.swing.JButton sendPrivateMessageButton;
+    private javax.swing.JButton regbutton1;
+    private javax.swing.JButton regbutton2;
+    private javax.swing.JButton regbutton3;
+    private javax.swing.JButton regbutton4;
+    private javax.swing.JButton regbutton5;
     // End of variables declaration//GEN-END:variables
 
-     @Override
+    @Override
     public void reciveMessage(String message) throws RemoteException {
 
         reciveMessagesTextArea.append(message + "\n");
@@ -357,20 +490,22 @@ private User client;
 
     @Override
     public String getClientName() throws RemoteException {
-        return client.getUserName();
+//        return client.getUserName();
+
+        return chatservice.getUserName(user_id + "");
     }
 
     @Override
     public int getId() throws RemoteException {
-        return client.getId();
+        return user_id;
 
     }
 
     @Override
     public void recieveFile(String fileName, byte[] data) throws RemoteException {
-        FileOutputStream output=null;
+        FileOutputStream output = null;
         try {
-            File file=new File(fileName);
+            File file = new File(fileName);
             output = new FileOutputStream(file);
             output.write(data);
             output.close();
